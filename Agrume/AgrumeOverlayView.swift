@@ -12,37 +12,30 @@ final class AgrumeOverlayView: UIView {
   
   weak var delegate: AgrumeOverlayViewDelegate?
 
-  private lazy var navigationBar: UINavigationBar = {
-    let navigationBar = UINavigationBar()
-    navigationBar.usesAutoLayout(true)
-    navigationBar.backgroundColor = .clear
-    navigationBar.shadowImage = UIImage()
-    navigationBar.setBackgroundImage(UIImage(), for: .default)
-    navigationBar.items = [navigationItem]
-    return navigationBar
+  private lazy var closeButton: UIButton = {
+    let button = UIButton(type: .custom)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.setTitle("Close", for: .normal)
+    button.setImage(nil, for: .normal)
+    button.usesAutoLayout(true)
+    return button
   }()
   
-  private lazy var navigationItem = UINavigationItem(title: "")
-  private lazy var defaultCloseButton = UIBarButtonItem(title: NSLocalizedString("Close", comment: "Close image view"),
-                                                        style: .plain, target: self, action: #selector(close))
-  
-  init(closeButton: UIBarButtonItem?) {
+  init(closeButton: UIButton?) {
     super.init(frame: .zero)
 
-    addSubview(navigationBar)
-
     if let closeButton = closeButton {
-      closeButton.target = self
-      closeButton.action = #selector(close)
-      navigationItem.leftBarButtonItem = closeButton
-    } else {
-      navigationItem.leftBarButtonItem = defaultCloseButton
+        closeButton.translatesAutoresizingMaskIntoConstraints = false
+        self.closeButton = closeButton
     }
     
+    addSubview(self.closeButton)
+    
+    self.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
+    
     NSLayoutConstraint.activate([
-      navigationBar.topAnchor.constraint(equalTo: portableSafeTopInset),
-      navigationBar.widthAnchor.constraint(equalTo: widthAnchor),
-      navigationBar.centerXAnchor.constraint(equalTo: centerXAnchor)
+      self.closeButton.topAnchor.constraint(equalTo: portableSafeTopInset),
+      self.closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
       ])
   }
   

@@ -31,6 +31,8 @@ public final class Agrume: UIViewController {
   }
   /// Hide status bar when presenting. Defaults to `false`
   public var hideStatusBar = false
+    
+  public var loaderView: UIView?
 
   /// Tap behaviour, i.e. what happens when you tap outside of the image area
   public enum TapBehavior {
@@ -231,7 +233,18 @@ public final class Agrume: UIViewController {
     if startIndex > 0 {
       collectionView.scrollToItem(at: IndexPath(item: startIndex, section: 0), at: [], animated: false)
     }
-    view.addSubview(spinner)
+    
+    if let loaderView = loaderView {
+        loaderView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loaderView)
+        NSLayoutConstraint.activate([
+                loaderView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+                loaderView.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            ])
+    } else {
+        view.addSubview(spinner)
+    }
+    
   }
   
   private func show(from viewController: UIViewController) {
@@ -258,13 +271,15 @@ public final class Agrume: UIViewController {
   }
   
   private func addOverlayView() {
-    if case .withButton(let button) = dismissal {
+    switch dismissal {
+    case .withButton(let button), .withPhysicsAndButton(let button):
       let overlayView = AgrumeOverlayView(closeButton: button)
       overlayView.delegate = self
       overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
       overlayView.frame = view.bounds
       view.addSubview(overlayView)
       self.overlayView = overlayView
+    default: break
     }
   }
 
@@ -338,17 +353,18 @@ extension Agrume: UICollectionViewDataSource {
     let cell: AgrumeCell = collectionView.dequeue(indexPath: indexPath)
     
     cell.tapBehavior = tapBehavior
-    if case .withPhysics = dismissal {
-      cell.hasPhysics = true
-    } else {
-      cell.hasPhysics = false
+    switch dismissal {
+    case .withPhysics, .withPhysicsAndButton:   cell.hasPhysics = true
+    case .withButton:                           cell.hasPhysics = false
     }
 
     spinner.alpha = 1
+    loaderView?.alpha = 1
     dataSource?.image(forIndex: indexPath.item) { [weak self] image in
       DispatchQueue.main.async {
         cell.image = image
         self?.spinner.alpha = 0
+        self?.loaderView?.alpha = 0
       }
     }
     // Only allow panning if horizontal swiping fails. Horizontal swiping is only active for zoomed in images

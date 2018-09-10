@@ -19,5 +19,6 @@ public enum Background {
 /// - withButton: Overlay with a close button. Pass an optional `UIBarButtonItem` to control the look
 public enum Dismissal {
   case withPhysics
-  case withButton(UIBarButtonItem?)
+  case withButton(UIButton?)
+  case withPhysicsAndButton(UIButton?)
 }
