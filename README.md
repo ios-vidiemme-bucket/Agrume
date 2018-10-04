@@ -11,7 +11,7 @@ An iOS image viewer written in Swift with support for multiple images.
 
 ## Requirements
 
-- Swift 4.1 (for Swift 3 support, use version 3.x)
+- Swift 4.2 (for Swift 3 support, use version 3.x)
 - iOS 9.0+
 - Xcode 9+
 
@@ -84,7 +84,7 @@ This shows a way of keeping the zoomed library and the one in the background syn
 
 ### Animated gifs
 
-Agrume bundles [SwiftyGif](https://github.com/kirualex/SwiftyGif) to display animated gifs. You use SwiftyGif's custom `UIImage` initializer:
+Agrume bundles [Zoetrope](https://github.com/JanGorman/Zoetrope) to display animated gifs. You use Zoetrope's custom `UIImage` initializer:
 
 ```swift
 

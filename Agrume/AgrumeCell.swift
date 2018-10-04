@@ -3,7 +3,7 @@
 //
 
 import UIKit
-import SwiftyGif
+import Zoetrope
 
 protocol AgrumeCellDelegate: AnyObject {
   
@@ -41,8 +41,8 @@ final class AgrumeCell: UICollectionViewCell {
 
   var image: UIImage? {
     didSet {
-      if image?.imageData != nil, let image = image {
-        imageView.setGifImage(image)
+      if image?.zoetrope != nil, let image = image {
+        imageView.displayGif(image)
       } else {
         imageView.image = image
       }
@@ -440,7 +440,7 @@ extension AgrumeCell: UIScrollViewDelegate {
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
     let highVelocity: CGFloat = .highScrollVelocity
     let velocity = scrollView.panGestureRecognizer.velocity(in: scrollView.panGestureRecognizer.view)
-    if notZoomed() && (fabs(velocity.x) > highVelocity || fabs(velocity.y) > highVelocity) {
+    if notZoomed() && (abs(velocity.x) > highVelocity || abs(velocity.y) > highVelocity) {
       dismiss()
     }
   }
