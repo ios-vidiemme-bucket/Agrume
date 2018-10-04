@@ -8,7 +8,7 @@ import Agrume
 final class CustomCloseButtonViewController: UIViewController {
  
   private lazy var agrume: Agrume = {
-    let button = UIBarButtonItem(barButtonSystemItem: .stop, target: nil, action: nil)
+    let button = UIButton(type: .custom)
     button.tintColor = .red
     return Agrume(image: #imageLiteral(resourceName: "MapleBacon"), background: .blurred(.regular), dismissal: .withButton(button))
   }()
