@@ -225,7 +225,7 @@ public final class Agrume: UIViewController {
     backgroundImageView.image = backgroundSnapshot
     view.addSubview(backgroundImageView)
     
-    if case .blurred(_) = background {
+    if case .blurred = background {
       blurContainerView.addSubview(blurView)
     }
     view.addSubview(blurContainerView)
@@ -279,7 +279,8 @@ public final class Agrume: UIViewController {
       overlayView.frame = view.bounds
       view.addSubview(overlayView)
       self.overlayView = overlayView
-    default: break
+    default:
+      break
     }
   }
 
@@ -354,8 +355,10 @@ extension Agrume: UICollectionViewDataSource {
     
     cell.tapBehavior = tapBehavior
     switch dismissal {
-    case .withPhysics, .withPhysicsAndButton:   cell.hasPhysics = true
-    case .withButton:                           cell.hasPhysics = false
+    case .withPhysics, .withPhysicsAndButton:
+      cell.hasPhysics = true
+    case .withButton:
+      cell.hasPhysics = false
     }
 
     spinner.alpha = 1
