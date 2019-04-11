@@ -459,7 +459,6 @@ extension Agrume: AgrumeOverlayViewDelegate {
   }
   
   func agrumeOverlayViewWantsToShare(_ view: AgrumeOverlayView) {
-    print("Share")
     dataSource?.image(forIndex: 0, completion: { [weak self] image in
       let shareVC : UIActivityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
       self?.present(shareVC, animated: true, completion: nil)
