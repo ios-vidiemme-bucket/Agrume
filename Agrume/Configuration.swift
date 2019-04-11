@@ -23,3 +23,9 @@ public enum Dismissal {
   case withButton(UIButton?)
   case withPhysicsAndButton(UIButton?)
 }
+
+public enum Shareble {
+  case withPhysics
+  case withButton(UIButton?)
+  case withPhysicsAndButton(UIButton?)
+}

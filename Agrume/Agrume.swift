@@ -10,6 +10,7 @@ public final class Agrume: UIViewController {
   private let startIndex: Int
   private let background: Background
   private let dismissal: Dismissal
+  private let share: Shareble
   
   private var overlayView: UIView?
   private weak var dataSource: AgrumeDataSource?
@@ -49,8 +50,8 @@ public final class Agrume: UIViewController {
   ///   - image: The image to present
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
-  public convenience init(image: UIImage, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics) {
-    self.init(images: [image], background: background, dismissal: dismissal)
+  public convenience init(image: UIImage, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+    self.init(images: [image], background: background, dismissal: dismissal, share: share)
   }
 
   /// Initialize with a single image url
@@ -59,8 +60,8 @@ public final class Agrume: UIViewController {
   ///   - url: The image url to present
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
-  public convenience init(url: URL, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics) {
-    self.init(urls: [url], background: background, dismissal: dismissal)
+  public convenience init(url: URL, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+    self.init(urls: [url], background: background, dismissal: dismissal, share: share)
   }
 
   /// Initialize with a data source
@@ -71,8 +72,8 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
 	public convenience init(dataSource: AgrumeDataSource, startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics) {
-    self.init(images: nil, dataSource: dataSource, startIndex: startIndex, background: background, dismissal: dismissal)
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+    self.init(images: nil, dataSource: dataSource, startIndex: startIndex, background: background, dismissal: dismissal, share: share)
 	}
 
   /// Initialize with an array of images
@@ -83,8 +84,8 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
   public convenience init(images: [UIImage], startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics) {
-    self.init(images: images, urls: nil, startIndex: startIndex, background: background, dismissal: dismissal)
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+    self.init(images: images, urls: nil, startIndex: startIndex, background: background, dismissal: dismissal, share: share)
   }
 
   /// Initialize with an array of image urls
@@ -95,12 +96,12 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics) {
-    self.init(images: nil, urls: urls, startIndex: startIndex, background: background, dismissal: dismissal)
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+    self.init(images: nil, urls: urls, startIndex: startIndex, background: background, dismissal: dismissal, share:share)
   }
 
 	private init(images: [UIImage]? = nil, urls: [URL]? = nil, dataSource: AgrumeDataSource? = nil, startIndex: Int,
-               background: Background, dismissal: Dismissal) {
+               background: Background, dismissal: Dismissal, share: Shareble) {
     switch (images, urls) {
     case (let images?, nil):
       self.images = images.map { AgrumeImage(image: $0) }
@@ -113,6 +114,7 @@ public final class Agrume: UIViewController {
     self.startIndex = startIndex
     self.background = background
     self.dismissal = dismissal
+    self.share = share
     super.init(nibName: nil, bundle: nil)
     
     self.dataSource = dataSource ?? self
@@ -271,16 +273,36 @@ public final class Agrume: UIViewController {
   }
   
   private func addOverlayView() {
+    var dismissalbutton:UIButton?
+    var shareblebutton:UIButton?
     switch dismissal {
     case .withButton(let button), .withPhysicsAndButton(let button):
-      let overlayView = AgrumeOverlayView(closeButton: button)
-      overlayView.delegate = self
-      overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-      overlayView.frame = view.bounds
-      view.addSubview(overlayView)
-      self.overlayView = overlayView
+      dismissalbutton = button
     default:
       break
+    }
+    switch share {
+    case .withButton(let button), .withPhysicsAndButton(let button):
+      shareblebutton = button
+    default:
+      break
+    }
+    if dismissalbutton != nil {
+      if shareblebutton != nil {
+        let overlayView = AgrumeOverlayView(closeButton: dismissalbutton, shareButton: shareblebutton)
+        overlayView.delegate = self
+        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlayView.frame = view.bounds
+        view.addSubview(overlayView)
+        self.overlayView = overlayView
+      }else {
+        let overlayView = AgrumeOverlayView(closeButton: dismissalbutton, shareButton: nil)
+        overlayView.delegate = self
+        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        overlayView.frame = view.bounds
+        view.addSubview(overlayView)
+        self.overlayView = overlayView
+      }
     }
   }
 
@@ -434,6 +456,10 @@ extension Agrume: AgrumeOverlayViewDelegate {
 
   func agrumeOverlayViewWantsToClose(_ view: AgrumeOverlayView) {
     dismiss()
+  }
+  
+  func agrumeOverlayViewWantsToShare(_ view: AgrumeOverlayView) {
+    print("Share")
   }
 
 }

@@ -6,6 +6,7 @@ import UIKit
 
 protocol AgrumeOverlayViewDelegate: AnyObject {
   func agrumeOverlayViewWantsToClose(_ view: AgrumeOverlayView)
+  func agrumeOverlayViewWantsToShare(_ view: AgrumeOverlayView)
 }
 
 final class AgrumeOverlayView: UIView {
@@ -21,9 +22,19 @@ final class AgrumeOverlayView: UIView {
     return button
   }()
   
-  init(closeButton: UIButton?) {
+  private lazy var shareButton: UIButton = {
+    let button = UIButton(type: .custom)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    button.setTitle("Share", for: .normal)
+    button.setImage(nil, for: .normal)
+    button.usesAutoLayout(true)
+    return button
+  }()
+  
+  init(closeButton: UIButton?, shareButton: UIButton?) {
     super.init(frame: .zero)
 
+    /*Close Button*/
     if let closeButton = closeButton {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         self.closeButton = closeButton
@@ -37,7 +48,23 @@ final class AgrumeOverlayView: UIView {
       self.closeButton.topAnchor.constraint(equalTo: portableSafeTopInset),
       self.closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
       ])
+    
+    /*Share Button*/
+    if let shareButton = shareButton {
+      shareButton.translatesAutoresizingMaskIntoConstraints = false
+      self.shareButton = shareButton
+    }
+    
+    addSubview(self.shareButton)
+    
+    self.shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
+    
+    NSLayoutConstraint.activate([
+      self.shareButton.topAnchor.constraint(equalTo: portableSafeTopInset),
+      self.shareButton.trailingAnchor.constraint(equalTo: self.closeButton.leadingAnchor, constant: -10)
+      ])
   }
+  
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -53,6 +80,11 @@ final class AgrumeOverlayView: UIView {
   @objc
   private func close() {
     delegate?.agrumeOverlayViewWantsToClose(self)
+  }
+  
+  @objc
+  private func share() {
+    delegate?.agrumeOverlayViewWantsToShare(self)
   }
   
 }
