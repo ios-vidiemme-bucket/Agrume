@@ -12,7 +12,7 @@ public final class Agrume: UIViewController {
   private let dismissal: Dismissal
   private let share: Shareble
   
-  private var overlayView: UIView?
+  private var overlayView: AgrumeOverlayView?
   private weak var dataSource: AgrumeDataSource?
 
   public typealias DownloadCompletion = (_ image: UIImage?) -> Void
@@ -460,8 +460,13 @@ extension Agrume: AgrumeOverlayViewDelegate {
   
   func agrumeOverlayViewWantsToShare(_ view: AgrumeOverlayView) {
     dataSource?.image(forIndex: 0, completion: { [weak self] image in
-      let shareVC : UIActivityViewController = UIActivityViewController(activityItems: [image], applicationActivities: nil)
-      self?.present(shareVC, animated: true, completion: nil)
+      guard let self = self else { return }
+      let shareVC : UIActivityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
+      if let overlayView = self.overlayView {
+        shareVC.popoverPresentationController?.sourceView = overlayView.shareButton
+        shareVC.popoverPresentationController?.sourceRect = overlayView.shareButton.bounds
+      }
+      self.present(shareVC, animated: true, completion: nil)
     })
   }
 

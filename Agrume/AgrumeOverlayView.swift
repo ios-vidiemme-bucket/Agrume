@@ -22,7 +22,7 @@ final class AgrumeOverlayView: UIView {
     return button
   }()
   
-  private lazy var shareButton: UIButton = {
+  lazy var shareButton: UIButton = {
     let button = UIButton(type: .custom)
     button.translatesAutoresizingMaskIntoConstraints = false
     button.setTitle("Share", for: .normal)
