@@ -14,7 +14,7 @@ final class CustomCloseButtonViewController: UIViewController {
     let buttonShare = UIButton(type: .custom)
     buttonShare.tintColor = .red
     buttonShare.setImage(UIImage.init(named: "shareicon"), for: .normal)
-    return Agrume(image: #imageLiteral(resourceName: "MapleBacon"), background: .blurred(.regular), dismissal: .withPhysicsAndButton(button), share: .withPhysicsAndButton(buttonShare))
+    return Agrume(image: #imageLiteral(resourceName: "MapleBacon"), background: .blurred(.regular), dismissal: .withPhysicsAndButton(button), share: .withButton(buttonShare))
   }()
   
   @IBAction private func showImage() {

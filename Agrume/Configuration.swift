@@ -25,7 +25,5 @@ public enum Dismissal {
 }
 
 public enum Shareble {
-  case withPhysics
   case withButton(UIButton?)
-  case withPhysicsAndButton(UIButton?)
 }

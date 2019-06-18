@@ -50,7 +50,7 @@ public final class Agrume: UIViewController {
   ///   - image: The image to present
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
-  public convenience init(image: UIImage, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+  public convenience init(image: UIImage, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withButton(nil)) {
     self.init(images: [image], background: background, dismissal: dismissal, share: share)
   }
 
@@ -60,7 +60,7 @@ public final class Agrume: UIViewController {
   ///   - url: The image url to present
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
-  public convenience init(url: URL, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+  public convenience init(url: URL, background: Background = .colored(.black), dismissal: Dismissal = .withPhysics, share: Shareble = .withButton(nil)) {
     self.init(urls: [url], background: background, dismissal: dismissal, share: share)
   }
 
@@ -72,7 +72,7 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
 	public convenience init(dataSource: AgrumeDataSource, startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withButton(nil)) {
     self.init(images: nil, dataSource: dataSource, startIndex: startIndex, background: background, dismissal: dismissal, share: share)
 	}
 
@@ -84,7 +84,7 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
   public convenience init(images: [UIImage], startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withButton(nil)) {
     self.init(images: images, urls: nil, startIndex: startIndex, background: background, dismissal: dismissal, share: share)
   }
 
@@ -96,7 +96,7 @@ public final class Agrume: UIViewController {
   ///   - background: The background configuration
   ///   - dismissal: The dismiss configuration
   public convenience init(urls: [URL], startIndex: Int = 0, background: Background = .colored(.black),
-                          dismissal: Dismissal = .withPhysics, share: Shareble = .withPhysics) {
+                          dismissal: Dismissal = .withPhysics, share: Shareble = .withButton(nil)) {
     self.init(images: nil, urls: urls, startIndex: startIndex, background: background, dismissal: dismissal, share:share)
   }
 
@@ -282,10 +282,8 @@ public final class Agrume: UIViewController {
       break
     }
     switch share {
-    case .withButton(let button), .withPhysicsAndButton(let button):
+    case .withButton(let button):
       shareblebutton = button
-    default:
-      break
     }
     if dismissalbutton != nil {
       if shareblebutton != nil {
