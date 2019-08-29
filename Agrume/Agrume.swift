@@ -136,7 +136,7 @@ public final class Agrume: UIViewController {
   private var _blurContainerView: UIView?
   private var blurContainerView: UIView {
     if _blurContainerView == nil {
-      let view = UIView(frame: self.view.frame)
+      let view = UIView()
       view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
       if case .colored(let color) = background {
         view.backgroundColor = color
@@ -166,11 +166,12 @@ public final class Agrume: UIViewController {
       layout.minimumLineSpacing = 0
       layout.scrollDirection = .horizontal
       layout.itemSize = view.frame.size
-      
-      let collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+
+      let collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
       collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
       collectionView.register(AgrumeCell.self, forCellWithReuseIdentifier: String(describing: AgrumeCell.self))
       collectionView.dataSource = self
+      collectionView.delegate = self
       collectionView.isPagingEnabled = true
       collectionView.backgroundColor = .clear
       collectionView.delaysContentTouches = false
@@ -253,9 +254,8 @@ public final class Agrume: UIViewController {
     DispatchQueue.main.async {
       self.blurContainerView.alpha = 1
       self.collectionView.alpha = 0
-      self.collectionView.frame = self.view.frame
-      let scaling: CGFloat = .initialScalingToExpandFrom
-      self.collectionView.transform = CGAffineTransform(scaleX: scaling, y: scaling)
+      let scale: CGFloat = .initialScaleToExpandFrom
+      self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
 
       viewController.present(self, animated: false) {
         UIView.animate(withDuration: .transitionAnimationDuration,
@@ -273,34 +273,22 @@ public final class Agrume: UIViewController {
   }
   
   private func addOverlayView() {
-    var dismissalbutton:UIButton?
-    var shareblebutton:UIButton?
-    switch dismissal {
-    case .withButton(let button), .withPhysicsAndButton(let button):
-      dismissalbutton = button
-    default:
-      break
-    }
+    var shareButton: UIBarButtonItem?
     switch share {
     case .withButton(let button):
-      shareblebutton = button
+      shareButton = button
     }
-    if dismissalbutton != nil {
-      if shareblebutton != nil {
-        let overlayView = AgrumeOverlayView(closeButton: dismissalbutton, shareButton: shareblebutton)
-        overlayView.delegate = self
-        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        overlayView.frame = view.bounds
-        view.addSubview(overlayView)
-        self.overlayView = overlayView
-      }else {
-        let overlayView = AgrumeOverlayView(closeButton: dismissalbutton, shareButton: nil)
-        overlayView.delegate = self
-        overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        overlayView.frame = view.bounds
-        view.addSubview(overlayView)
-        self.overlayView = overlayView
-      }
+
+    switch dismissal {
+    case .withButton(let button), .withPhysicsAndButton(let button):
+      let overlayView = AgrumeOverlayView(closeButton: button, shareButton: shareButton)
+      overlayView.delegate = self
+      overlayView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+      overlayView.frame = view.bounds
+      view.addSubview(overlayView)
+      self.overlayView = overlayView
+    default:
+      break
     }
   }
 
@@ -372,7 +360,7 @@ extension Agrume: UICollectionViewDataSource {
 
   public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     let cell: AgrumeCell = collectionView.dequeue(indexPath: indexPath)
-    
+
     cell.tapBehavior = tapBehavior
     switch dismissal {
     case .withPhysics, .withPhysicsAndButton:
@@ -395,9 +383,25 @@ extension Agrume: UICollectionViewDataSource {
     cell.delegate = self
     return cell
   }
+
+}
+
+extension Agrume: UICollectionViewDelegate {
+
+  public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+    guard let indexPath = collectionView.indexPathsForVisibleItems.first else {
+      return
+    }
+    didScroll?(indexPath.item)
+  }
+
 }
 
 extension Agrume: AgrumeCellDelegate {
+
+  var isSingleImageMode: Bool {
+    return dataSource?.numberOfImages == 1
+  }
   
   private func dismissCompletion(_ finished: Bool) {
     presentingViewController?.dismiss(animated: false) { [weak self] in
@@ -440,14 +444,11 @@ extension Agrume: AgrumeCellDelegate {
                     self.collectionView.alpha = 0
                     self.blurContainerView.alpha = 0
                     self.overlayView?.alpha = 0
-                    let scaling: CGFloat = .maxScalingForExpandingOffscreen
-                    self.collectionView.transform = CGAffineTransform(scaleX: scaling, y: scaling)
+                    let scale: CGFloat = .maxScaleForExpandingOffscreen
+                    self.collectionView.transform = CGAffineTransform(scaleX: scale, y: scale)
       }, completion: dismissCompletion)
   }
-  
-  func isSingleImageMode() -> Bool {
-    return dataSource?.numberOfImages == 1
-  }
+
 }
 
 extension Agrume: AgrumeOverlayViewDelegate {
@@ -461,8 +462,7 @@ extension Agrume: AgrumeOverlayViewDelegate {
       guard let self = self else { return }
       let shareVC : UIActivityViewController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
       if let overlayView = self.overlayView {
-        shareVC.popoverPresentationController?.sourceView = overlayView.shareButton
-        shareVC.popoverPresentationController?.sourceRect = overlayView.shareButton.bounds
+        shareVC.popoverPresentationController?.barButtonItem = overlayView.publicShareButton
       }
       self.present(shareVC, animated: true, completion: nil)
     })

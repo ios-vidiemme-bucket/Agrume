@@ -13,58 +13,49 @@ final class AgrumeOverlayView: UIView {
   
   weak var delegate: AgrumeOverlayViewDelegate?
 
-  private lazy var closeButton: UIButton = {
-    let button = UIButton(type: .custom)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.setTitle("Close", for: .normal)
-    button.setImage(nil, for: .normal)
-    button.usesAutoLayout(true)
-    return button
+  private lazy var navigationBar: UINavigationBar = {
+    let navigationBar = UINavigationBar()
+    navigationBar.usesAutoLayout(true)
+    navigationBar.backgroundColor = .clear
+    navigationBar.shadowImage = UIImage()
+    navigationBar.setBackgroundImage(UIImage(), for: .default)
+    navigationBar.items = [navigationItem]
+    return navigationBar
   }()
+
+  private lazy var navigationItem = UINavigationItem(title: "")
+  private lazy var defaultCloseButton = UIBarButtonItem(title: NSLocalizedString("Close", comment: "Close image view"),
+                                                        style: .plain, target: self, action: #selector(close))
+
+  var publicShareButton: UIBarButtonItem?
   
-  lazy var shareButton: UIButton = {
-    let button = UIButton(type: .custom)
-    button.translatesAutoresizingMaskIntoConstraints = false
-    button.setTitle("Share", for: .normal)
-    button.setImage(nil, for: .normal)
-    button.usesAutoLayout(true)
-    return button
-  }()
-  
-  init(closeButton: UIButton?, shareButton: UIButton?) {
+  init(closeButton: UIBarButtonItem?, shareButton: UIBarButtonItem?) {
     super.init(frame: .zero)
+
+    addSubview(navigationBar)
 
     /*Close Button*/
     if let closeButton = closeButton {
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        self.closeButton = closeButton
+        closeButton.target = self
+        closeButton.action = #selector(close)
     }
-    
-    addSubview(self.closeButton)
-    
-    self.closeButton.addTarget(self, action: #selector(close), for: .touchUpInside)
-    
-    NSLayoutConstraint.activate([
-      self.closeButton.topAnchor.constraint(equalTo: portableSafeTopInset),
-      self.closeButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8)
-      ])
-    
+
     /*Share Button*/
     if let shareButton = shareButton {
-      shareButton.translatesAutoresizingMaskIntoConstraints = false
-      self.shareButton = shareButton
+      shareButton.target = self
+      shareButton.action = #selector(share)
+      publicShareButton = shareButton
     }
-    
-    addSubview(self.shareButton)
-    
-    self.shareButton.addTarget(self, action: #selector(share), for: .touchUpInside)
-    
+
     NSLayoutConstraint.activate([
-      self.shareButton.topAnchor.constraint(equalTo: portableSafeTopInset),
-      self.shareButton.trailingAnchor.constraint(equalTo: self.closeButton.leadingAnchor, constant: -10)
+      navigationBar.topAnchor.constraint(equalTo: portableSafeTopInset),
+      navigationBar.widthAnchor.constraint(equalTo: widthAnchor),
+      navigationBar.centerXAnchor.constraint(equalTo: centerXAnchor)
       ])
+
+    navigationItem.rightBarButtonItems = [closeButton ?? defaultCloseButton, shareButton].compactMap{$0}
+
   }
-  
   
   required init?(coder aDecoder: NSCoder) {
     fatalError("init(coder:) has not been implemented")

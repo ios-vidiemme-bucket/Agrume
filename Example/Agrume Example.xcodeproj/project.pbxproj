@@ -14,6 +14,8 @@
 		F2539BCB20F23ABB00062C80 /* CloseButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2539BCA20F23ABB00062C80 /* CloseButtonViewController.swift */; };
 		F2539BD020F23F2F00062C80 /* Agrume.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F2A520401B130CC000924912 /* Agrume.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F2539BD420F2418900062C80 /* CustomCloseButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2539BD320F2418900062C80 /* CustomCloseButtonViewController.swift */; };
+		F29C53E62221AF7500903FBD /* SwiftyGif.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F2539B9D20F22D9000062C80 /* SwiftyGif.framework */; };
+		F29C53E72221AF7500903FBD /* SwiftyGif.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F2539B9D20F22D9000062C80 /* SwiftyGif.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F2A5201B1B130C7E00924912 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A5201A1B130C7E00924912 /* AppDelegate.swift */; };
 		F2A5201D1B130C7E00924912 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2A5201C1B130C7E00924912 /* ViewController.swift */; };
 		F2A520201B130C7E00924912 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2A5201E1B130C7E00924912 /* Main.storyboard */; };
@@ -74,6 +76,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				F2539BD020F23F2F00062C80 /* Agrume.framework in Embed Frameworks */,
+				F29C53E72221AF7500903FBD /* SwiftyGif.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -111,6 +114,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F29C53E62221AF7500903FBD /* SwiftyGif.framework in Frameworks */,
 				771DA7342179EF1800541206 /* SwiftyGif.framework in Frameworks */,
 				F20F5BD41B134CAF00F9F499 /* Agrume.framework in Frameworks */,
 			);
@@ -263,14 +267,13 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 1000;
+				LastUpgradeCheck = 1020;
 				ORGANIZATIONNAME = Schnaub;
 				TargetAttributes = {
 					F2A520141B130C7E00924912 = {
 						CreatedOnToolsVersion = 6.3.2;
-						DevelopmentTeam = 599U75PK5L;
-						LastSwiftMigration = 1000;
-						ProvisioningStyle = Manual;
+						DevelopmentTeam = CPRVB9W254;
+						LastSwiftMigration = 1020;
 					};
 					F2A520291B130C7E00924912 = {
 						CreatedOnToolsVersion = 6.3.2;
@@ -281,7 +284,7 @@
 			};
 			buildConfigurationList = F2A520101B130C7E00924912 /* Build configuration list for PBXProject "Agrume Example" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -413,6 +416,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -468,6 +472,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -523,8 +528,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.schnaub.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = Dev_Vidiemme_WildCard;
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -539,8 +543,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.schnaub.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

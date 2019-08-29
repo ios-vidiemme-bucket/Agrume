@@ -20,10 +20,10 @@ public enum Background {
 /// - withPhysicsAndButton: Combines both behaviours. Physics and the close button all in one
 public enum Dismissal {
   case withPhysics
-  case withButton(UIButton?)
-  case withPhysicsAndButton(UIButton?)
+  case withButton(UIBarButtonItem?)
+  case withPhysicsAndButton(UIBarButtonItem?)
 }
 
 public enum Shareble {
-  case withButton(UIButton?)
+  case withButton(UIBarButtonItem?)
 }

@@ -8,12 +8,10 @@ import Agrume
 final class CustomCloseButtonViewController: UIViewController {
  
   private lazy var agrume: Agrume = {
-    let button = UIButton(type: .custom)
+    let button = UIBarButtonItem(barButtonSystemItem: .stop, target: nil, action: nil)
     button.tintColor = .red
-    button.setImage(UIImage.init(named: "navbar_close_white_shadow"), for: .normal)
-    let buttonShare = UIButton(type: .custom)
-    buttonShare.tintColor = .red
-    buttonShare.setImage(UIImage.init(named: "shareicon"), for: .normal)
+    let buttonShare = UIBarButtonItem(image: UIImage.init(named: "shareicon"), style: .plain, target: nil, action: nil)
+    buttonShare.tintColor = .blue
     return Agrume(image: #imageLiteral(resourceName: "MapleBacon"), background: .blurred(.regular), dismissal: .withPhysicsAndButton(button), share: .withButton(buttonShare))
   }()
   
